@@ -122,7 +122,7 @@ def run(setting):
     sgd = SGD(lr = setting.lr)
     model.compile(loss='binary_crossentropy', optimizer = "sgd")
     model.load_weights("kaggleSolution/weights/" + str(setting.name) + ".h5")
-    history = model.fit({'input1':X_train, 'input2':X_pca_train}, {'output':Y_train}, nb_epoch= nb_epoch, verbose = 1, batch_size = batch_size)
+    #history = model.fit({'input1':X_train, 'input2':X_pca_train}, {'output':Y_train}, nb_epoch= nb_epoch, verbose = 1, batch_size = batch_size)
     #model.save_weights("kaggleSolution/weights/" + str(setting.name) + ".h5")
 
     plot(model, to_file="kaggleSolution/visualization/"+ str(setting.name) + ".png", show_shapes = True)
