@@ -10,10 +10,10 @@ from sklearn import svm
 
 def run(setting):
     feature = Feature(setting.name, "kaggleSolution/kaggleSettings.yml")
-    X_train, Y_train = feature.loadFromDisk("4D", "train")
+    X_train, Y_train = feature.loadFromDisk("fft", "train")
     X_train, Y_train = feature.overlapInEachHour()
     X_train, _ = feature.scaleAcrossTime(X_train)
-    X_test,  Y_test = feature.loadFromDisk("4D", "test")
+    X_test,  Y_test = feature.loadFromDisk("fft", "test")
     X_test, _ = feature.scaleAcrossTime(X_test)
 
     channels = X_train.shape[1]
