@@ -10,7 +10,6 @@ from Setting import *
 import sklearn.preprocessing
 import sklearn.decomposition
 import sklearn.random_projection
-from unbalanced_dataset import SMOTE, UnderSampler, ClusterCentroids
 
 class Feature:
     def __init__(self, subjectName, settingPath):
@@ -52,6 +51,9 @@ class Feature:
 
     def fft(self, dataArrayX, dataArrayY, bandNum=8, samplingRate=400, winLengthSec = 30, strideSec = 30):
         #dataArrayX's shape is matFileNumber * channels * matdata
+        print "In function fft:"
+        print dataArrayX.shape
+
         channels = dataArrayX.shape[1]
         dataLengthSec = dataArrayX.shape[2] / samplingRate
         steps = (dataLengthSec - winLengthSec) / strideSec + 1
@@ -63,11 +65,13 @@ class Feature:
                     data = dataArrayX[i, j, windowIndex * samplingRate:(windowIndex + winLengthSec) * samplingRate]
                     fftData = numpy.log10(numpy.absolute(numpy.fft.rfft(data)))
                     fftFrequency = numpy.fft.rfftfreq(n = data.shape[-1], d = 1.0 / samplingRate)
-                    newArray[i, j, : bandNum, frameIndex] = self.groupIntoBands(fftData, fftFrequency, bandNum = self.setting.bandNum)
+                    #newArray[i, j, : bandNum, frameIndex] = self.groupIntoBands(fftData, fftFrequency, bandNum = self.setting.bandNum)
+                    newArray[i, j, : bandNum, frameIndex] = self.groupIntoBands(fftData, fftFrequency, bandNum = 8)
                     newArray[i, j, -1, frameIndex] = numpy.std(data)
 
         self.resultArrayX = newArray
         self.resultArrayY = dataArrayY
+
         return self.resultArrayX, self.resultArrayY
 
     def daubWavelet(self, dataArrayX, dataArrayY, bandNum=8, waveletMode = 1, samplingRate=400, winLengthSec = 30, strideSec = 30):
@@ -120,6 +124,7 @@ class Feature:
             files = glob.glob(savePath+  "/"+ self.subjectName+ "/*trainX.npy")
         elif trainOrTest == "test":
             files = glob.glob(savePath+ "/"+ self.subjectName+ "/*testX.npy")
+
         files = sorted(files)
         trainX = None
         trainY = None
@@ -154,7 +159,7 @@ class Feature:
             self.resultArrayY = testY
             return testX, testY
 
-    def overlapInEachHour(self, shuffle=False):
+    def overlapInEachHour(self, shuffle=False, smote= False):
         shapeX = self.resultArrayX.shape
         shapeY = self.resultArrayY.shape
 
@@ -186,6 +191,18 @@ class Feature:
 
         self.resultArrayX = numpy.concatenate((self.resultArrayX, tempArrayX),axis = 0)
         self.resultArrayY = numpy.concatenate((self.resultArrayY, numpy.asarray(tempArrayY)), axis = 0)
+
+        if smote == True:
+            zeros = numpy.where(self.resultArrayY == 0)
+            ones = numpy.where(self.resultArrayY == 1)
+            ratio = float(len(ones[0])) / float(len(zeros[0]))
+            verbose = False
+            ratio = 1 / ratio / 3
+            smote = SMOTE(ratio = ratio, verbose=verbose, kind='regular')
+            xshape = self.resultArrayX.shape
+            smox, smoy = smote.fit_transform(self.resultArrayX.reshape((xshape[0],xshape[1] * xshape[2] * xshape[3])), self.resultArrayY)
+            self.resultArrayX = smox.reshape((smox.shape[0],xshape[1], xshape[2], xshape[3]))
+            self.resultArrayY = smoy
 
         if shuffle == True:
             resultArray = zip(self.resultArrayX, self.resultArrayY)

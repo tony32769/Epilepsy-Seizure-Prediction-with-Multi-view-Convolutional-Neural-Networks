@@ -22,18 +22,19 @@ for j in xrange(7):
             featureName = "Patient_" + str(j - 4)
 
         setting.loadSettings(name = featureName)
-        feature = Feature(featureName)
+        feature = Feature(featureName, "kaggleSolution/kaggleSettings.yml")
         processor = Processor()
         basePath = setting.rawDataPath + feature.subjectName
+        setting.loadSettings(name = feature.subjectName)
 
         X_train, y_train = processor.processDataPerSubject(basePath, trainOrTest="train", splitNum=setting.splitNum, sequence = i)
-        X_train, y_train = feature.fft(X_train, y_train, winLengthSec = setting.winLengthSec)
-        feature.saveToDisk(trainOrTest = "train", name= str(i), featureName = "fft")
-        X_train, y_train = feature.pca(X_train, y_train,winLengthSec = setting.winLengthSec)
+        #X_train, y_train = feature.fft(X_train, y_train, winLengthSec = 120)
+        #feature.saveToDisk(trainOrTest = "train", name= str(i), featureName = "fft")
+        X_train, y_train = feature.pca(X_train, y_train,winLengthSec = 120)
         feature.saveToDisk(trainOrTest = "train", name= str(i), featureName = "pca")
 
         X_test, y_test = processor.processDataPerSubject(basePath, trainOrTest="test",splitNum=setting.splitNum, sequence = i)
-        X_test, y_test = feature.fft(X_test, y_test, winLengthSec = setting.winLengthSec)
-        feature.saveToDisk(trainOrTest="test", name = str(i), featureName = "fft")
-        X_test, y_test = feature.pca(X_test, y_test, winLengthSec = setting.winLengthSec)
+        #X_test, y_test = feature.fft(X_test, y_test, winLengthSec = 120)
+        #feature.saveToDisk(trainOrTest="test", name = str(i), featureName = "fft")
+        X_test, y_test = feature.pca(X_test, y_test, winLengthSec = 120)
         feature.saveToDisk(trainOrTest="test", name = str(i), featureName = "pca")

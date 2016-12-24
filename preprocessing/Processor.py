@@ -1,7 +1,6 @@
 from ussociety.MatFile import *
 from ussociety.Subject import *
 from SignalUtils import *
-from unbalanced_dataset import SMOTE
 from Setting import *
 import glob
 
@@ -18,11 +17,11 @@ class Processor:
     def processDataPerMatFile(self,dataFile,trainOrTest="train"):
         self.matFileInstance.readMat(dataFile)
         self.matFileInstance.name = dataFile
-        self.matFileInstance.samplingRate = self.setting.resampleFrequency
-        self.matFileInstance.data = self.signalUtilInstance.resample(self.matFileInstance.data, self.setting.resampleFrequency)
+        self.matFileInstance.samplingRate = 400
+        self.matFileInstance.data = self.signalUtilInstance.resample(self.matFileInstance.data, 400)
         self.matFileInstance.data = self.signalUtilInstance.butterWorthBandpassFilter(self.matFileInstance.data, band=[0.1, 180], frequency = 400)
         #this is for comparison solution
-        self.matFileInstance.data = self.signalUtilInstance.butterWorthBandpassFilter(self.matFileInstance.data, band=[0.5, 128], frequency = 256)
+        #self.matFileInstance.data = self.signalUtilInstance.butterWorthBandpassFilter(self.matFileInstance.data, band=[0.5, 128], frequency = 256)
 
         matPerSlot = self.matFileInstance.getDataListPerTimeSlot(timeslot = self.matFileInstance.timeLength)
         size = matPerSlot.shape
@@ -86,7 +85,6 @@ class Processor:
                 return self.processData(dataList[i * amount: (i + 1)*amount],sequence = sequence, trainOrTest = trainOrTest)
 
     def processData(self,trainList,sequence = 0,trainOrTest = "train"):
-
         dim0  = len(trainList)
         if dim0 == 0:
             raise "trainList is empty"
