@@ -18,7 +18,7 @@ from sklearn.metrics import confusion_matrix, roc_curve, auc, accuracy_score, cl
 import theano
 from Setting import *
 
-def run(setting, X_train, Y_train, X_test, X_pca_train, Y_pca_train, X_pca_test):
+def run(model,setting, X_train, Y_train, X_test, X_pca_train, Y_pca_train, X_pca_test):
 
     nb_filters = setting.nb_filter
     batch_size = setting.batch_size
@@ -33,88 +33,91 @@ def run(setting, X_train, Y_train, X_test, X_pca_train, Y_pca_train, X_pca_test)
     X_pca_test = X_pca_test.reshape(X_pca_test.shape[0], 1, X_pca_test.shape[1] * X_pca_test.shape[2], X_pca_test.shape[3])
     Y_train = np_utils.to_categorical(Y_train, 2)
 
-    input1 = Input(name="input1", shape = (1, channels * bins, steps))
-    seq1 = noise.GaussianNoise(setting.noise, input_shape=(1, channels * bins, steps))(input1)
-    seq1 = Convolution2D(nb_filters, channels * bins, 1,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           input_shape=(1, channels * bins, steps),
-                           activation="relu"
-                           )(seq1)
-    #seq1 = Dropout(0.1)(seq1)
-    seq1 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq1)
-    #seq1 = Dropout(0.1)(seq1)
-    seq1 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq1)
-    #seq1 = Dropout(0.1)(seq1)
-    seq1 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq1)
-    #seq1 = Dropout(0.1)(seq1)
-    seq1 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq1)
-    seq1 = Flatten()(seq1)
-    output1 = Dense(setting.output1, activation="tanh")(seq1)
+    if model is None:
+        input1 = Input(name="input1", shape = (1, channels * bins, steps))
+        seq1 = noise.GaussianNoise(setting.noise, input_shape=(1, channels * bins, steps))(input1)
+        seq1 = Convolution2D(nb_filters, channels * bins, 1,
+                               #init="uniform",
+                               W_regularizer=l2(l=setting.l2),
+                               input_shape=(1, channels * bins, steps),
+                               activation="relu"
+                               )(seq1)
+        #seq1 = Dropout(0.1)(seq1)
+        seq1 = Convolution2D(nb_filters, 1, 3,
+                               #init="uniform",
+                               W_regularizer=l2(l=setting.l2),
+                               activation="relu"
+                               )(seq1)
+        #seq1 = Dropout(0.1)(seq1)
+        #seq1 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq1)
+        #seq1 = Dropout(0.1)(seq1)
+        #seq1 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq1)
+        #seq1 = Dropout(0.1)(seq1)
+        #seq1 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq1)
+        seq1 = Flatten()(seq1)
+        output1 = Dense(setting.output1, activation="tanh")(seq1)
 
-    input2 = Input(name="input2", shape=(1, channels * bins_pca, steps))
-    seq2 = noise.GaussianNoise(setting.noise, input_shape=(1, channels * bins_pca, steps))(input2)
-    seq2 = Convolution2D(nb_filters, channels * bins_pca, 1,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           input_shape=(1, channels * bins_pca, steps),
-                           activation="relu"
-                           )(seq2)
-    #seq2 = Dropout(0.1)(seq2)
-    seq2 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq2)
-    #seq2 = Dropout(0.1)(seq2)
-    seq2 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq2)
-    #seq2 = Dropout(0.1)(seq2)
-    seq2 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq2)
-    #seq2 = Dropout(0.1)(seq2)
-    seq2 = Convolution2D(nb_filters, 1, 3,
-                           #init="uniform",
-                           W_regularizer=l2(l=setting.l2),
-                           activation="relu"
-                           )(seq2)
-    seq2 = Flatten()(seq2)
-    output2 = Dense(setting.output2, activation="tanh")(seq2)
+        input2 = Input(name="input2", shape=(1, channels * bins_pca, steps))
+        seq2 = noise.GaussianNoise(setting.noise, input_shape=(1, channels * bins_pca, steps))(input2)
+        seq2 = Convolution2D(nb_filters, channels * bins_pca, 1,
+                               #init="uniform",
+                               W_regularizer=l2(l=setting.l2),
+                               input_shape=(1, channels * bins_pca, steps),
+                               activation="relu"
+                               )(seq2)
+        #seq2 = Dropout(0.1)(seq2)
+        seq2 = Convolution2D(nb_filters, 1, 3,
+                               #init="uniform",
+                               W_regularizer=l2(l=setting.l2),
+                               activation="relu"
+                               )(seq2)
+        #seq2 = Dropout(0.1)(seq2)
+        #seq2 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq2)
+        #seq2 = Dropout(0.1)(seq2)
+        #seq2 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq2)
+        #seq2 = Dropout(0.1)(seq2)
+        #seq2 = Convolution2D(nb_filters, 1, 3,
+        #                       #init="uniform",
+        #                       W_regularizer=l2(l=setting.l2),
+        #                       activation="relu"
+        #                       )(seq2)
+        seq2 = Flatten()(seq2)
+        output2 = Dense(setting.output2, activation="tanh")(seq2)
 
-    merged = merge([output1, output2], mode="concat")
-    merged = Dense(512, activation="tanh")(merged)
-    merged = Dense(256, activation="tanh")(merged)
-    merged = Dense(128, activation="tanh")(merged)
+        merged = merge([output1, output2], mode="concat")
+        merged = Dense(512, activation="tanh")(merged)
+        merged = Dense(256, activation="tanh")(merged)
+        #merged = Dense(128, activation="tanh")(merged)
 
-    output = Dense(2, activation="softmax", name="output")(merged)
-    model = Model(input = [input1, input2], output = [output])
-    sgd = SGD(lr = 0.01)
-    model.compile(loss="binary_crossentropy", optimizer = sgd)
+        output = Dense(2, activation="softmax", name="output")(merged)
+        model = Model(input = [input1, input2], output = [output])
+
+        sgd = SGD(lr = 0.01)
+
+        model.compile(loss="binary_crossentropy", optimizer = sgd)
+
     model.load_weights("my_model_weights.h5")
-
-    history = model.fit({'input1':X_train, 'input2':X_pca_train}, {'output':Y_train}, nb_epoch=nb_epoch, verbose = 1, batch_size = batch_size, class_weight=[1, 100000])
+    history = model.fit({'input1':X_train, 'input2':X_pca_train}, {'output':Y_train}, nb_epoch=nb_epoch, verbose = 1, batch_size = batch_size, class_weight=[1, 1])
     predictions = model.predict({'input1':X_test, 'input2':X_pca_test})
     output = predictions[:,1]
     outputList = []
@@ -125,19 +128,19 @@ def run(setting, X_train, Y_train, X_test, X_pca_train, Y_pca_train, X_pca_test)
             outputList.append(0)
     output = numpy.array(outputList)
 
-    return output
+    return output, model
 
 #nameList = ["chb01", "chb05", "chb06"]
-nameList = ["chb01"]
-setting = Setting("chbmitSolution/chbmitsettings.yml")
+nameList = ["chb06"]
+setting = Setting("chbmitSolution/transfersettings.yml")
 for name in nameList:
     setting = setting.loadSettings(name = name)
-    feature = Feature(setting.name, "chbmitSolution/chbmitsettings.yml")
+    feature = Feature(setting.name, "chbmitSolution/transfersettings.yml")
     X_train, Y_train = feature.loadFromDisk("mitfft","train")
     X_train, Y_train = feature.overlapInEachHour()
     X_train, _ = feature.scaleAcrossTime(X_train)
     X_pca_train, Y_pca_train = feature.loadFromDisk("mitpca","train")
-    X_pca_train[numpy.isneginf(X_pca_train)] = -99999
+    X_pca_train[numpy.isneginf(X_pca_train)] = 0
     X_pca_train, Y_pca_train = feature.overlapInEachHour()
     X_pca_train, _ = feature.scaleAcrossTime(X_pca_train)
 
@@ -146,12 +149,12 @@ for name in nameList:
     spList = []
     acList = []
 
-    for j in xrange(100):
+    model = None
+    for j in xrange(1):
         print j
-        cv = StratifiedKFold(Y_train, n_folds = 3, shuffle=False)
-        #cv = KFold(len(Y_train), n_folds = 3, shuffle=True)
+        cv = StratifiedKFold(Y_train, n_folds = 3, shuffle = True)
         for i, (train, test) in enumerate(cv):
-            prob = run(setting, X_train[train], Y_train[train], X_train[test], X_pca_train[train], Y_pca_train[train], X_pca_train[test])
+            prob, model = run(model, setting, X_train[train], Y_train[train], X_train[test], X_pca_train[train], Y_pca_train[train], X_pca_train[test])
             y = Y_train[test]
             matrix = confusion_matrix(y, prob)
 

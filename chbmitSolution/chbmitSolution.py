@@ -93,13 +93,13 @@ def run(setting, X_train, Y_train, X_test, X_pca_train, Y_pca_train, X_pca_test)
     return output
 
 #nameList = ["chb01", "chb05", "chb06"]
-nameList = ["chb01"]
+nameList = ["chb06"]
 setting = Setting("chbmitSolution/chbmitsettings.yml")
 for name in nameList:
     setting = setting.loadSettings(name = name)
     feature = Feature(setting.name, "chbmitSolution/chbmitsettings.yml")
     X_train, Y_train = feature.loadFromDisk("mitpca","train")
-    X_train, Y_train = feature.overlapInEachHour(shuffle = True)
+    X_train, Y_train = feature.overlapInEachHour()
     X_train, _ = feature.scaleAcrossTime(X_train)
     X_pca_train, Y_pca_train = feature.loadFromDisk("mitfft","train")
     X_pca_train, Y_pca_train = feature.overlapInEachHour()
@@ -110,9 +110,9 @@ for name in nameList:
     spList = []
     acList = []
 
-    for j in xrange(100):
+    for j in xrange(1):
         print j
-        cv = StratifiedKFold(Y_train, n_folds = 3, shuffle=False)
+        cv = StratifiedKFold(Y_train, n_folds = 3, shuffle=True)
         for i, (train, test) in enumerate(cv):
             prob = run(setting, X_train[train], Y_train[train], X_train[test], X_pca_train[train], Y_pca_train[train], X_pca_train[test])
             y = Y_train[test]
