@@ -1,0 +1,87 @@
+Setting:
+  DataProcess:
+    resampleFrequency: 256
+    bandNum: 80
+    winLengthSec: 120
+    processedDataPath: "/home/xiaobin/trainData/"
+    rawDataPath: "/home/xiaobin/MITDATA/"
+    savePath: "/home/xiaobin/Disk/"
+    splitNum: 10
+    timeSlotLength: 60
+    timeSlotNum: 10
+  Model:
+    batch_size: 128
+    dropout: 0.4
+    l2: 0.01
+    nb_epoch: 2000
+    nb_filter: 64
+    noise: 0
+    output1: 128
+    output2: 128
+  name: "chb01"
+################################################
+Setting:
+  DataProcess:
+    resampleFrequency: 400
+    bandNum: 80
+    winLengthSec: 120
+    processedDataPath: "/home/xiaobin/trainData/"
+    rawDataPath: "/home/xiaobin/MITDATA/"
+    savePath: "/home/xiaobin/Disk/"
+    splitNum: 10
+    timeSlotLength: 60
+    timeSlotNum: 10
+  Model:
+    batch_size: 128
+    dropout: 0
+    l2: 0.01
+    nb_epoch: 2000
+    nb_filter: 64
+    noise: 0.2
+    output1: 128
+    output2: 128
+  name: "chb05"
+################################################
+Setting:
+  DataProcess:
+    resampleFrequency: 400
+    bandNum: 80
+    winLengthSec: 120
+    processedDataPath: "/home/xiaobin/trainData/"
+    rawDataPath: "/home/xiaobin/MITDATA/"
+    savePath: "/home/xiaobin/Disk/"
+    splitNum: 10
+    timeSlotLength: 60
+    timeSlotNum: 10
+  Model:
+    batch_size: 128
+    dropout: 0
+    l2: 0.01
+    nb_epoch: 5000
+    nb_filter: 64
+    noise: 0
+    output1: 128
+    output2: 128
+  name: "chb06"
+################################################
+Setting:
+  DataProcess:
+    resampleFrequency: 400
+    bandNum: 80
+    winLengthSec: 120
+    processedDataPath: "/home/xiaobin/trainData/"
+    rawDataPath: "/home/xiaobin/MITDATA/"
+    savePath: "/home/xiaobin/Disk/"
+    splitNum: 10
+    timeSlotLength: 60
+    timeSlotNum: 10
+  Model:
+    batch_size: 128
+    dropout: 0
+    l2: 0.01
+    nb_epoch: 1000
+    nb_filter: 64
+    noise: 0
+    output1: 128
+    output2: 128
+  name: "chb00"
