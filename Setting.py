@@ -18,7 +18,7 @@ class Setting:
         self.batch_size = None
         self.output1 = None
         self.output2 = None
-        self.noise = None
+        self.lr = None
         self.dropout = None
         self.l2 = None
 
@@ -46,7 +46,7 @@ class Setting:
                     self.batch_size = yamlFile["Setting"]["Model"]["batch_size"]
                     self.output1 = yamlFile["Setting"]["Model"]["output1"]
                     self.output2 = yamlFile["Setting"]["Model"]["output2"]
-                    self.noise = yamlFile["Setting"]["Model"]["noise"]
+                    self.lr = yamlFile["Setting"]["Model"]["lr"]
                     self.dropout = yamlFile["Setting"]["Model"]["dropout"]
                     self.l2 = yamlFile["Setting"]["Model"]["l2"]
                     self.savePath = yamlFile["Setting"]["DataProcess"]["savePath"]
@@ -66,7 +66,7 @@ class Setting:
                                                 batch_size = self.batch_size,
                                                 output1 = self.output1,
                                                 output2 = self.output2,
-                                                noise = self.noise,
+                                                lr = self.lr,
                                                 dropout = self.dropout,
                                                 l2 = self.l2)
                                    ))
